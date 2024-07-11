@@ -2,10 +2,19 @@ from fastapi import HTTPException
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.docstore.document import Document
 from app.db.connect_db import get_weaviate_client
+from weaviate.classes.query import Filter
 import re
 
 client = get_weaviate_client()
 documentCollection = client.collections.get("Document")
+
+def summaryPaper(texts):
+    try: 
+        res = texts
+        res = process_text(res)
+        return {"resultCode" : 200, "data" : res}
+    except Exception as e:
+        return {"resultCode": 500, "data": str(e)}
 
 # 전체 텍스트를 초록, 서론, 결론 추출
 def process_text(text):

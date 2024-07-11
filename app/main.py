@@ -1,10 +1,7 @@
 from fastapi import FastAPI
-from app.api import paper_endpoints, trans_endpoints, ocr_endpoints, keyword_endpoints
+from app.api import summary_endpoints, topic_endpoints
 from app.core.config import settings
-from app.api.keyword import endpoints as search_endpoints
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.scheduler import start_scheduler  
-
 
 
 JH_IP = settings.JH_IP
@@ -23,12 +20,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-start_scheduler()
 
 # Include routers
-app.include_router(paper_endpoints.router, prefix="/api/paper", tags=["paper"])
-app.include_router(ocr_endpoints.router, prefix="/api/ocr", tags=["ocr"])
-app.include_router(search_endpoints.router, prefix="/search", tags=["search"])
+app.include_router(summary_endpoints.router, prefix="/api/summary", tags=["summary"])
+app.include_router(topic_endpoints.router, prefix="/api/topic", tags=["topic"])
 
 if __name__ == "__main__":
     import uvicorn
