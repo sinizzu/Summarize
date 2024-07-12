@@ -7,7 +7,14 @@ router = APIRouter()
 
 @router.get("/summaryPaper")
 async def summaryPaper():
-    response = await summary_service.searchFulltext("testdata")
+    response = summary_service.searchFulltext("testdata")
     texts = response['data'][0].get('texts', 'No content available')
-    return summary_service.summaryPaper(texts)
+    full = summary_service.textProcessing(texts)
+    if full['resultCode'] == 200 and 'data' in full:
+        start_combined_text = ' '.join([full['data'].get('abstract', ''), 
+                                    full['data'].get('introduction', '')])
+        end_combined_text = full['data'].get('conclusion', '')
+    combined_text = { "resultCode": 200, "data": [start_combined_text, end_combined_text] }
+    summary = summary_service.summarize("testdata", combined_text)
 
+    return {"summary": summary}
