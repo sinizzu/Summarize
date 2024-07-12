@@ -15,6 +15,10 @@ async def summaryPaper():
                                     full['data'].get('introduction', '')])
         end_combined_text = full['data'].get('conclusion', '')
     combined_text = { "resultCode": 200, "data": [start_combined_text, end_combined_text] }
-    summary = summary_service.summarize("testdata", combined_text)
+    summary = await summary_service.summarize("testdata", combined_text)
+    data = summary['data']
+    data = ". ".join(data)
+    print(data)
+    last_sum = summary_service.extract_key_sentences(data)
 
-    return {"summary": summary}
+    return {"summary": last_sum}

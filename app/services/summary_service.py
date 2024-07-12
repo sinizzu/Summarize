@@ -119,7 +119,7 @@ model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-def summarize(title: str, texts: dict):
+async def summarize(title: str, texts: dict):
     resultCode = texts["resultCode"]
     if resultCode == 200:
         texts = texts["data"]
@@ -138,7 +138,7 @@ def summarize(title: str, texts: dict):
     summaries = []
     # summary 존재 여부 확인
     get_summary = searchSummary(title)
-    print(get_summary)
+    # print(get_summary)
     res = get_summary.get("resultCode", 404)
     if res == 200:
         res = get_summary.get("data", "")
@@ -161,7 +161,7 @@ def summarize(title: str, texts: dict):
 def summarize_paragraph(paragraph):
     try:
         inputs = tokenizer(paragraph, return_tensors="pt", max_length=1024, truncation=True).to(device)
-        summary_ids = model.generate(inputs["input_ids"], max_length=512, min_length=30, length_penalty=2.0, num_beams=4, early_stopping=True)
+        summary_ids = model.generate(inputs["input_ids"], max_length=514, min_length=100, length_penalty=2.0, num_beams=4, early_stopping=True)
         summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
         print(f"Summary is okey\n")
         return summary
