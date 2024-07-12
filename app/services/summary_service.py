@@ -96,7 +96,7 @@ def process_text(text):
         print(f"Error processing text: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-def extract_key_sentences(text, num_sentences=7):
+def extract_key_sentences(text, num_sentences=6):
     sentences = sent_tokenize(text)
     if len(sentences) < num_sentences:
         num_sentences = len(sentences)
