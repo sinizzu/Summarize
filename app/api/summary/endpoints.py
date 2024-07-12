@@ -1,16 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
-from app.services import paper_service, keyword_extract_service
-from app.schemas import paper as paper_schema
-
-
+from app.services import summary_service
+from app.db.connect_db import get_weaviate_client
+from weaviate.classes.query import Filter
+import os
 router = APIRouter()
 
-@router.get("/getMeta", response_model=paper_schema.MetaResponse)
-async def get_meta(searchword: str):
-    return paper_service.getMeta(searchword)
-
-@router.post("/saveWea", response_model=paper_schema.SaveWeaResponse)
-async def save_wea(meta_response: paper_schema.MetaResponse):
-    return await paper_service.saveWea(meta_response)
-
+@router.get("/summaryPaper")
+async def summaryPaper():
+    response = await summary_service.searchFulltext("testdata")
+    texts = response['data'][0].get('texts', 'No content available')
+    return summary_service.summaryPaper(texts)
 

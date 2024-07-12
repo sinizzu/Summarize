@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Settings:
-    PROJECT_NAME: str = "MainFastAPI"
+    PROJECT_NAME: str = "SubFastAPI"
     PROJECT_VERSION: str = "1.0.0"
 
     # 데이터베이스 설정
