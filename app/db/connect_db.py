@@ -2,6 +2,7 @@ import weaviate
 from fastapi import Depends
 from app.core.config import settings
 
+
 def connect_to_weaviate():
     client = weaviate.connect_to_wcs(
         cluster_url=settings.WEAVIATE_URL,
