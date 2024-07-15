@@ -6,8 +6,8 @@ import os
 router = APIRouter()
 
 @router.get("/summaryPaper")
-async def summaryPaper():
-    response = summary_service.searchFulltext("testdata")
+async def summaryPaper(title: str):
+    response = summary_service.searchFulltext(title)
     texts = response['data'][0].get('texts', 'No content available')
     full = summary_service.textProcessing(texts)
     if full['resultCode'] == 200 and 'data' in full:
