@@ -168,3 +168,16 @@ def summarize_paragraph(paragraph):
     except Exception as e:
         print(f"Error summarizing paragraph: {e}")
         return paragraph
+    
+def summarize_texts(text):
+    try:
+        print("Summarizing text: ", len(text))
+        inputs = tokenizer(text, return_tensors="pt", max_length=514, truncation=True).to(device)
+        summary_ids = model.generate(inputs["input_ids"], max_length=256, min_length=50, length_penalty=2.0, num_beams=4, early_stopping=True)
+        summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+        print(f"Summary is okey\n")
+        return summary
+    except Exception as e:
+        print(f"Error summarizing paragraph: {e}")
+        return text
+    
