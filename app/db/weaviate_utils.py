@@ -1,6 +1,5 @@
-import weaviate
 import os
-
+import weaviate
 # 환경 변수 가져오기
 URL = os.getenv("WCS_URL")
 APIKEY = os.getenv("WCS_API_KEY")
