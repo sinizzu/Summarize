@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, Body
+from fastapi import APIRouter
 from app.services import summary_service
-from app.db.connect_db import get_weaviate_client
-from weaviate.classes.query import Filter
-import os
+
+
+
 router = APIRouter()
 
 @router.get("/summaryPaper")
