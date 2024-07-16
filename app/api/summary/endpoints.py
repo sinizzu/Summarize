@@ -1,13 +1,13 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, Request
 from app.services import summary_service
-
-
+from pydantic import BaseModel, ValidationError
+from app.schemas.sentence import TextRequest
 
 router = APIRouter()
 
 @router.get("/summaryPaper")
-async def summaryPaper():
-    response = summary_service.searchFulltext("testdata")
+async def summaryPaper(title: str):
+    response = summary_service.searchFulltext(title)
     texts = response['data'][0].get('texts', 'No content available')
     full = summary_service.textProcessing(texts)
     if full['resultCode'] == 200 and 'data' in full:
@@ -22,3 +22,13 @@ async def summaryPaper():
     last_sum = summary_service.extract_key_sentences(data)
 
     return {"summary": last_sum}
+
+# 넣을 때, \n을 삭제해줘야함.
+@router.post("/summaryScroll")
+async def summaryScroll(request: TextRequest):
+    try:
+        json_body = request.text
+        data = summary_service.summarize_texts(json_body)
+        return {"resultCode": 200, "data": data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
