@@ -1,6 +1,5 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException
 from app.services import summary_service, weaviate_service
-from pydantic import BaseModel, ValidationError
 from app.schemas.sentence import TextRequest
 
 router = APIRouter()

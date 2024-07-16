@@ -21,3 +21,18 @@ def searchFulltext(pdf_link: str):
             return {"resultCode" : 400, "data" : response}
     except Exception as e:
         return {"resultCode": 500, "data": str(e)}
+
+def searchAll(collection_name: str):
+    try:
+        collection = client.collections.get(collection_name)
+        response = collection.query.fetch_objects()
+        res = []
+        # 오브젝트가 있으면
+        if response.objects:
+            for object in response.objects:
+                res.append(object.properties) # 반환 데이터에 추가
+            return {"resultCode" : 200, "data" : res}
+        else:
+            return {"resultCode" : 400, "data" : response}
+    except Exception as e:
+        return {"resultCode": 500, "data": str(e)}

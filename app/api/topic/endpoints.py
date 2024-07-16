@@ -1,6 +1,6 @@
 from fastapi import HTTPException, APIRouter
 from fastapi.responses import JSONResponse
-from app.services import keyword_extract_service, summary_service, weaviate_service
+from app.services import keyword_extract_service, weaviate_service
 
 router = APIRouter()
 
