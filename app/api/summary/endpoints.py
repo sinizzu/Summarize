@@ -1,14 +1,14 @@
 from fastapi import APIRouter, HTTPException, Request
-from app.services import summary_service
+from app.services import summary_service, weaviate_service
 from pydantic import BaseModel, ValidationError
 from app.schemas.sentence import TextRequest
 
 router = APIRouter()
 
 @router.get("/summaryPaper")
-async def summaryPaper(title: str):
-    response = summary_service.searchFulltext(title)
-    texts = response['data'][0].get('texts', 'No content available')
+async def summaryPaper(pdf_link: str):
+    response = weaviate_service.searchFulltext(pdf_link)
+    texts = response['data'][0].get('full_text', 'No content available')
     full = summary_service.textProcessing(texts)
     if full['resultCode'] == 200 and 'data' in full:
         start_combined_text = ' '.join([full['data'].get('abstract', ''), 

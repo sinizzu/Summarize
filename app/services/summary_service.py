@@ -1,12 +1,11 @@
 from fastapi import HTTPException
-from app.db.connect_db import get_weaviate_client
-from weaviate.classes.query import Filter
 import re
 import os
 from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import networkx as nx
+from app.services import weaviate_service 
 
 # 요약 import
 import warnings
@@ -21,30 +20,10 @@ import torch
 # 경고 메시지 무시
 warnings.filterwarnings("ignore", category=FutureWarning, module='huggingface_hub')
 
-client = get_weaviate_client()
-documentCollection = client.collections.get("Document")
-
-# weaviate full text 검색
-def searchFulltext(title: str):
-    try: 
-        response = documentCollection.query.fetch_objects(
-            filters=Filter.by_property("title").equal(title),
-        )
-        res = []
-        # 오브젝트가 있으면
-        if response.objects:
-            for object in response.objects:
-                res.append(object.properties) # 반환 데이터에 추가
-            return {"resultCode" : 200, "data" : res}
-        else:
-            return {"resultCode" : 400, "data" : response}
-    except Exception as e:
-        return {"resultCode": 500, "data": str(e)}
-
 # weaviate summary 검색
 def searchSummary(title: str):
     try: 
-        response = searchFulltext(title)
+        response = weaviate_service.searchFulltext(title)
         summary = response['data'][0].get('summary')
         if summary :
             return {"resultCode" : 200, "data" : summary}
