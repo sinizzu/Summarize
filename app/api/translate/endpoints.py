@@ -8,6 +8,7 @@ router = APIRouter()
 async def transelateText(request: TextRequest):
     try:
         json_body = request.text
+        print(json_body)
         data = transelate_service.entokoTranslate(json_body)
         return {"resultCode": 200, "data": data}
     except Exception as e:

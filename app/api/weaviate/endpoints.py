@@ -5,8 +5,8 @@ from app.schemas.sentence import TextRequest
 router = APIRouter()
 
 @router.get("/searchFulltext")
-async def searchFulltext(pdf_link: str):
-    response = weaviate_service.searchFulltext(pdf_link)
+async def searchFulltext(pdf_id: str):
+    response = weaviate_service.searchFulltext(pdf_id)
     texts = response['data'][0].get('full_text', 'No content available')
 
     return {"full_text": texts}

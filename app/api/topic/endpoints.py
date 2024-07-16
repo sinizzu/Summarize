@@ -5,9 +5,9 @@ from app.services import keyword_extract_service, weaviate_service
 router = APIRouter()
 
 @router.get('/keywordExtract')
-async def keyword_extraction(pdf_link: str):
+async def keyword_extraction(pdf_id: str):
     try:
-        response = weaviate_service.searchFulltext(pdf_link)
+        response = weaviate_service.searchFulltext(pdf_id)
         texts = response['data'][0].get('full_text', 'No content available')
         keywordsResult = keyword_extract_service.keyword_extraction(texts)
 

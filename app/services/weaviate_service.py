@@ -6,10 +6,10 @@ client = get_weaviate_client()
 documentCollection = client.collections.get("pdf")
 
 # weaviate full text 검색
-def searchFulltext(pdf_link: str):
+def searchFulltext(pdf_id: str):
     try: 
         response = documentCollection.query.fetch_objects(
-            filters=Filter.by_property("pdf_link").equal(pdf_link),
+            filters=Filter.by_property("pdf_id").equal(pdf_id),
         )
         res = []
         # 오브젝트가 있으면

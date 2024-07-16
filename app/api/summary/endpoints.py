@@ -5,8 +5,8 @@ from app.schemas.sentence import TextRequest
 router = APIRouter()
 
 @router.get("/summaryPaper")
-async def summaryPaper(pdf_link: str):
-    response = weaviate_service.searchFulltext(pdf_link)
+async def summaryPaper(pdf_id: str):
+    response = weaviate_service.searchFulltext(pdf_id)
     texts = response['data'][0].get('full_text', 'No content available')
     full = summary_service.textProcessing(texts)
     if full['resultCode'] == 200 and 'data' in full:
