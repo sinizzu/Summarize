@@ -9,11 +9,7 @@ class Paper(BaseModel):
     direct_link: str
     pdf_link: str
     category: str
+    trans_summary: str
+    summary: str
 
-class MetaResponse(BaseModel):
-    resultCode: int
-    data: List[Paper]
 
-class SaveWeaResponse(BaseModel):
-    resultCode: int
-    data: dict

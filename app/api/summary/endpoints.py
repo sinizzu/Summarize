@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException
 from app.services import summary_service, weaviate_service
 from app.schemas.sentence import TextRequest
 
