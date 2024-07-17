@@ -8,7 +8,6 @@ paperCollection = client.collections.get("paper")
 
 # weaviate full text 검색
 def searchFulltext(pdf_id: str):
-def searchFulltext(pdf_id: str):
     try: 
         response = pdfCollection.query.fetch_objects(
             filters=Filter.by_property("pdf_id").equal(pdf_id),
