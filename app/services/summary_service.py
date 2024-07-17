@@ -20,18 +20,6 @@ import torch
 # 경고 메시지 무시
 warnings.filterwarnings("ignore", category=FutureWarning, module='huggingface_hub')
 
-# weaviate summary 검색
-def searchSummary(title: str):
-    try: 
-        response = weaviate_service.searchFulltext(title)
-        summary = response['data'][0].get('summary')
-        if summary :
-            return {"resultCode" : 200, "data" : summary}
-        else:
-            return {"resultCode" : 400, "data" : summary}
-    except Exception as e:
-        return {"resultCode": 500, "data": str(e)}
-
 def textProcessing(texts):
     try: 
         res = texts
@@ -98,12 +86,12 @@ model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-async def summarize(title: str, texts: dict):
+async def summarize(pdf_id: str, texts: dict):
     resultCode = texts["resultCode"]
     if resultCode == 200:
         texts = texts["data"]
     else:
-        return {"resultCode": 200, "data": "No content available"}
+        return {"resultCode": 422, "data": "No content available"}
     
     # 스플리터 지정
     text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
@@ -113,24 +101,15 @@ async def summarize(title: str, texts: dict):
     )
     
     combined_summaries = []
-    
     summaries = []
-    # summary 존재 여부 확인
-    get_summary = searchSummary(title)
-    # print(get_summary)
-    res = get_summary.get("resultCode", 404)
-    if res == 200:
-        res = get_summary.get("data", "")
-        summaries = res.split("\n")
-    else:
-        with ThreadPoolExecutor(max_workers=3) as executor:
-            for text in texts:
-                split_texts = text_splitter.split_text(text)
-                futures = [executor.submit(summarize_paragraph, paragraph) for paragraph in split_texts]
-                for future in futures:
-                    summaries.append(future.result())
-        
-        combined_summaries.extend(summaries)
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        for text in texts:
+            split_texts = text_splitter.split_text(text)
+            futures = [executor.submit(summarize_paragraph, paragraph) for paragraph in split_texts]
+            for future in futures:
+                summaries.append(future.result())
+    
+    combined_summaries.extend(summaries)
     
     if combined_summaries:
         return {"resultCode": 200, "data": combined_summaries}
