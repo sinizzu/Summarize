@@ -17,3 +17,20 @@ async def searchAll(collection_name: str):
     data = response['data']
     
     return {"data": data}
+
+@router.get("/searchPaperId")
+async def searchPaperId(pdf_url: str):
+    response = weaviate_service.searchPaperId(pdf_url)
+    data = response['data']
+    
+    return {"data": data}
+
+@router.get("/searchPaperSummary")
+async def searchPaperSummary(pdf_id: str):
+    response = weaviate_service.searchPaperSummary(pdf_id)
+    data = response['data']
+    
+    if data:
+        return {"resultCode" : 200, "data" : data}
+    else:
+        return {"resultCode" : 400, "data" : data}

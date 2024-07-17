@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.api import summary_endpoints, topic_endpoints, translate_endpoints, weaviate_endpoints
+from app.api import summary_endpoints, topic_endpoints, weaviate_endpoints
 from app.core.config import settings
 from fastapi.middleware.cors import CORSMiddleware
 import os
@@ -25,6 +26,7 @@ app.add_middleware(
 app.include_router(summary_endpoints.router, prefix="/api/summary", tags=["summary"])
 app.include_router(topic_endpoints.router, prefix="/api/topic", tags=["topic"])
 app.include_router(translate_endpoints.router, prefix="/api/translate", tags=["translate"])
+app.include_router(weaviate_endpoints.router, prefix="/api/weaviate", tags=["weaviate"])
 app.include_router(weaviate_endpoints.router, prefix="/api/weaviate", tags=["weaviate"])
 
 if __name__ == "__main__":
