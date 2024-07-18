@@ -25,12 +25,22 @@ async def searchPaperId(pdf_url: str):
     
     return {"data": data}
 
-@router.get("/searchPaperSummary")
-async def searchPaperSummary(pdf_id: str):
-    response = weaviate_service.searchPaperSummary(pdf_id)
+@router.get("/searchSummary")
+async def summarySearch(pdf_id: str):
+    response = weaviate_service.summarySearch(pdf_id)
     data = response['data']
     
     if data:
+        return {"resultCode" : 200, "data" : data}
+    else:
+        return {"resultCode" : 400, "data" : data}
+    
+@router.get("/searchKeywords")
+async def keywordSearch(pdf_id: str):
+    response = weaviate_service.keywordSearch(pdf_id)
+    data = response['data']
+    
+    if response['resultCode'] == 200:
         return {"resultCode" : 200, "data" : data}
     else:
         return {"resultCode" : 400, "data" : data}
