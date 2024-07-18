@@ -54,12 +54,15 @@ def searchPaperId(pdf_url: str):
     except Exception as e:
         return {"resultCode": 500, "data": str(e)}
     
-def searchPaperSummary(pdf_id: str):
+def summarySearch(pdf_id: str):
     try: 
-        response = paperCollection.query.fetch_object_by_id(
-            uuid=pdf_id
+        response = pdfCollection.query.fetch_objects(
+            filters=Filter.by_property("pdf_id").equal(pdf_id),
         )
-        res = response.properties.get("summary")
+        # 오브젝트가 있으면
+        if response.objects:
+            for object in response.objects:
+                res = object.properties.get("summary")
         if res == None:
             res = "No summary available"
             return {"resultCode" : 404, "data" : res}
@@ -70,14 +73,36 @@ def searchPaperSummary(pdf_id: str):
     
 def summarySave(pdf_id: str, summary: str):
     try: 
-        response = paperCollection.data.update(
-            uuid=pdf_id,
+        res = pdfCollection.query.fetch_objects(
+            filters=Filter.by_property("pdf_id").equal(pdf_id)
+        )
+        for o in res.objects:
+            pdf_uuid = o.uuid
+        response = pdfCollection.data.update(
+            uuid=pdf_uuid,
             properties={"summary": summary}
         )
-        return {"resultCode" : 200, "data" : "success"}
+        return {"resultCode" : 200, "data" : response}
     except Exception as e:
         return {"resultCode": 500, "data": str(e)}
-    
+
+def keywordSearch(pdf_id: str):
+    try: 
+        response = pdfCollection.query.fetch_objects(
+            filters=Filter.by_property("pdf_id").equal(pdf_id),
+        )
+        # 오브젝트가 있으면
+        if response.objects:
+            for object in response.objects:
+                res = object.properties.get("keywords")
+        if res == None:
+            res = "No keywords available"
+            return {"resultCode" : 404, "data" : res}
+        else:
+            return {"resultCode": 200,"data" : res}
+    except Exception as e:
+        return {"resultCode": 500, "data": str(e)}
+        
 def keywordSave(pdf_id: str, keywords: list):
     try: 
         res = pdfCollection.query.fetch_objects(
@@ -89,6 +114,6 @@ def keywordSave(pdf_id: str, keywords: list):
             uuid=pdf_uuid,
             properties={"keywords": keywords}
         )
-        return {"resultCode" : 200, "data" : response}
+        return {"resultCode" : 200, "data" : "success"}
     except Exception as e:
         return {"resultCode": 500, "data": str(e)}

@@ -38,7 +38,7 @@ def textProcessing(texts):
 def process_text(text):
     try:
         # Define regex patterns for abstract, introduction, and conclusion
-        abstract_pattern = re.compile(r'(?i)abstract\s*(.*?)(?=(introduction|1\sIntroduction))', re.DOTALL)
+        abstract_pattern = re.compile(r'(?i)abstract\s*(.*?)(?=(introduction|1\s*(.*?)Introduction))', re.DOTALL)
         introduction_pattern = re.compile(r'(?i)(introduction|1\sIntroduction)\s*(.*?)(?=\\n\\n2\s)', re.DOTALL)
         conclusion_pattern = re.compile(r'(?i)(conclusion|6\sConclusion)\s*(.*)', re.DOTALL)
 
@@ -86,7 +86,7 @@ model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
-async def summarize(pdf_id: str, texts: dict):
+async def summarizePaper(texts: dict):
     resultCode = texts["resultCode"]
     if resultCode == 200:
         texts = texts["data"]
@@ -113,6 +113,25 @@ async def summarize(pdf_id: str, texts: dict):
     
     if combined_summaries:
         return {"resultCode": 200, "data": combined_summaries}
+    else:
+        return {"resultCode": 404, "data": "Summarization failed"}
+    
+async def summarizePdf(texts: str):
+    # 스플리터 지정
+    text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
+        separator="\\n\\n",  # 분할 기준
+        chunk_size=2000,   # 청크 사이즈
+        chunk_overlap=100, # 중첩 사이즈
+    )
+    split_texts = text_splitter.split_text(texts)
+    summaries = []
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        futures = [executor.submit(summarize_paragraph, paragraph) for paragraph in split_texts]
+        for future in futures:
+            summaries.append(future.result())
+    
+    if summaries:
+        return {"resultCode": 200, "data": summaries}
     else:
         return {"resultCode": 404, "data": "Summarization failed"}
     
