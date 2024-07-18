@@ -114,6 +114,6 @@ def keywordSave(pdf_id: str, keywords: list):
             uuid=pdf_uuid,
             properties={"keywords": keywords}
         )
-        return {"resultCode" : 200, "data" : response}
+        return {"resultCode" : 200, "data" : "success"}
     except Exception as e:
         return {"resultCode": 500, "data": str(e)}

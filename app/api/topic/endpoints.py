@@ -23,9 +23,9 @@ async def keyword_extraction(pdf_id: str):
             data = res['data']
             print("save Keywords: ", data)
             if res['resultCode'] == 200:
-                return JSONResponse(content={"result_Code": 200, "data": res})
+                return JSONResponse(content={"result_Code": 200, "data": keywords})
             else:
-                return JSONResponse(content={"result_Code": 400, "data": res})
+                return JSONResponse(content={"result_Code": 400, "data": keywords})
     except Exception as e:
         print(f"Error in /keywordExtraction: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))

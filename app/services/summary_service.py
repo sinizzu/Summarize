@@ -116,20 +116,14 @@ async def summarizePaper(texts: dict):
     else:
         return {"resultCode": 404, "data": "Summarization failed"}
     
-async def summarizePdf(texts: dict):
-    resultCode = texts["resultCode"]
-    if resultCode == 200:
-        texts = texts["data"]
-    else:
-        return {"resultCode": 422, "data": "No content available"}
-    
+async def summarizePdf(texts: str):
     # 스플리터 지정
     text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
         separator="\\n\\n",  # 분할 기준
         chunk_size=2000,   # 청크 사이즈
         chunk_overlap=100, # 중첩 사이즈
     )
-    split_texts = text_splitter.split_text(texts["data"])
+    split_texts = text_splitter.split_text(texts)
     summaries = []
     with ThreadPoolExecutor(max_workers=3) as executor:
         futures = [executor.submit(summarize_paragraph, paragraph) for paragraph in split_texts]

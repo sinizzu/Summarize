@@ -40,13 +40,14 @@ async def summaryPdf(pdf_id: str):
     else:
         response = weaviate_service.searchFulltext(pdf_id)
         texts = response['data'][0].get('full_text', 'No content available')
-        combined_text = { "resultCode": 200, "data": texts }
-        summary = await summary_service.summarize(combined_text)
+        summary = await summary_service.summarizePdf(texts)
         data = summary['data']
         data = ". ".join(data)
-        last_sum = summary_service.extract_key_sentences(data)
+        # last_sum = summary_service.extract_key_sentences(data)
+        last_sum = await summary_service.summarizePdf(data)
+        print("last_sum: ", last_sum)
+        last_sum = last_sum['data'][0]
         save_result = weaviate_service.summarySave(pdf_id, last_sum)
-        print("save_result: ", save_result)
         return {"summary": last_sum}
 
 # 넣을 때, \n을 삭제해줘야함.
