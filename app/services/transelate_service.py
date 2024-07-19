@@ -8,7 +8,7 @@ translator = deepl.Translator(DEEL_KEY)
 def kotoenTranslate(text):
     print(text)
     transeText = translator.translate_text(text, source_lang="ko", target_lang="en-us")
-    return transeText
+    return transeText.text
 
 def entokoTranslate(text):
     transeText = translator.translate_text(text, source_lang="en", target_lang="ko")
