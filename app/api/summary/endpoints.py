@@ -40,6 +40,7 @@ async def summaryPdf(pdf_id: str):
     else:
         response = weaviate_service.searchFulltext(pdf_id)
         texts = response['data'][0].get('full_text', 'No content available')
+        # lang = response['data'][0].get('language', 'No content available')
         summary = await summary_service.summarizePdf(texts)
         data = summary['data']
         data = ". ".join(data)

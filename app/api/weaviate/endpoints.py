@@ -44,3 +44,10 @@ async def keywordSearch(pdf_id: str):
         return {"resultCode" : 200, "data" : data}
     else:
         return {"resultCode" : 400, "data" : data}
+    
+@router.get("/searchTranslateSummary")
+async def translateSummary(pdf_id: str):
+    try:
+        return weaviate_service.transelateSummarySearch(pdf_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
