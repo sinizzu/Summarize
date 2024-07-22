@@ -1,6 +1,7 @@
 import deepl
 from app.core.config import settings
 from app.services import weaviate_service
+import re
 
 DEEL_KEY = settings.DEEPL_AUTH_KEY
 translator = deepl.Translator(DEEL_KEY)
@@ -24,3 +25,11 @@ def summaryTranslate(pdf_id):
         response = entokoTranslate(summary)
         print("dnddddndnndn",response)
         return {"resultCode": 200, "data": response}
+    
+def korCheck(text):
+    p = re.compile('[ㄱ-힣]')
+    r = p.search(text)
+    if r is None:
+        return {"resultCode": 200, "lang": "en"}
+    else:
+        return {"resultCode": 200, "lang": "kr"}

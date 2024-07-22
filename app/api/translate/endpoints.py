@@ -37,6 +37,9 @@ async def transelateSummary(pdf_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.post("/checkLanguage")
+async def checkLanguage(request: TextRequest):
+    return transelate_service.korCheck(request.text)
     
 
 
