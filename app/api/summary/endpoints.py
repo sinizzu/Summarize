@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.services import summary_service, weaviate_service
-from app.schemas.sentence import TextRequest
+from app.schemas.sentence import TextRequest, LanguageRequest
 
 router = APIRouter()
 
@@ -40,12 +40,12 @@ async def summaryPdf(pdf_id: str):
     else:
         response = weaviate_service.searchFulltext(pdf_id)
         texts = response['data'][0].get('full_text', 'No content available')
-        # lang = response['data'][0].get('language', 'No content available')
-        summary = await summary_service.summarizePdf(texts)
+        lang = response['data'][0].get('language', 'No content available')
+        summary = await summary_service.summarizePdf(texts, lang)
         data = summary['data']
         data = ". ".join(data)
         # last_sum = summary_service.extract_key_sentences(data)
-        last_sum = await summary_service.summarizePdf(data)
+        last_sum = await summary_service.summarizePdf(data, lang)
         print("last_sum: ", last_sum)
         last_sum = last_sum['data'][0]
         save_result = weaviate_service.summarySave(pdf_id, last_sum)
@@ -53,10 +53,11 @@ async def summaryPdf(pdf_id: str):
 
 # 넣을 때, \n을 삭제해줘야함.
 @router.post("/summaryScroll")
-async def summaryScroll(request: TextRequest):
+async def summaryScroll(request: LanguageRequest):
     try:
-        json_body = request.text
-        data = summary_service.summarize_texts(json_body)
+        text = request.text
+        lang = request.lang
+        data = summary_service.summarize_texts(text, lang)
         return {"resultCode": 200, "data": data}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -65,3 +66,13 @@ async def summaryScroll(request: TextRequest):
 async def summarySave(pdf_id: str, summary: str):
     response = weaviate_service.summarySave(pdf_id, summary)
     return response
+
+# 넣을 때, \n을 삭제해줘야함.
+@router.post("/summaryKo")
+async def summaryKor(request: TextRequest):
+    try:
+        json_body = request.text
+        data = summary_service.summarizeTextsKo(json_body)
+        return {"resultCode": 200, "data": data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

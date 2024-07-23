@@ -1,20 +1,15 @@
 from fastapi import HTTPException
 import re
-import os
 from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import networkx as nx
-from app.services import weaviate_service 
 
 # 요약 import
 import warnings
 from concurrent.futures import ThreadPoolExecutor
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-from datetime import datetime
-import concurrent.futures
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.docstore.document import Document
 import torch
 
 # 경고 메시지 무시
@@ -78,13 +73,15 @@ def extract_key_sentences(text, num_sentences=6):
     return key_sentences
 
 # Hugging Face 요약 모델 설정
-model_name = "facebook/bart-large-cnn"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+model_name_en = "facebook/bart-large-cnn"
 
-# cuda == gpu
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
+model_name_ko = "eenzeenee/t5-base-korean-summarization"
+
+tokenizer_en = AutoTokenizer.from_pretrained(model_name_en)
+model_en = AutoModelForSeq2SeqLM.from_pretrained(model_name_en)
+
+tokenizer_ko = AutoTokenizer.from_pretrained(model_name_ko)
+model_ko = AutoModelForSeq2SeqLM.from_pretrained(model_name_ko)
 
 async def summarizePaper(texts: dict):
     resultCode = texts["resultCode"]
@@ -116,7 +113,7 @@ async def summarizePaper(texts: dict):
     else:
         return {"resultCode": 404, "data": "Summarization failed"}
     
-async def summarizePdf(texts: str):
+async def summarizePdf(texts: str, lang: str):
     # 스플리터 지정
     text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
         separator="\\n\\n",  # 분할 기준
@@ -126,7 +123,11 @@ async def summarizePdf(texts: str):
     split_texts = text_splitter.split_text(texts)
     summaries = []
     with ThreadPoolExecutor(max_workers=3) as executor:
-        futures = [executor.submit(summarize_paragraph, paragraph) for paragraph in split_texts]
+        if lang == 'kr':
+            summarize_def = summarize_paragraph_ko
+        else:
+            summarize_def = summarize_paragraph
+        futures = [executor.submit(summarize_def, paragraph) for paragraph in split_texts]
         for future in futures:
             summaries.append(future.result())
     
@@ -137,24 +138,40 @@ async def summarizePdf(texts: str):
     
 def summarize_paragraph(paragraph):
     try:
-        inputs = tokenizer(paragraph, return_tensors="pt", max_length=1024, truncation=True).to(device)
-        summary_ids = model.generate(inputs["input_ids"], max_length=514, min_length=100, length_penalty=2.0, num_beams=4, early_stopping=True)
-        summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+        inputs = tokenizer_en(paragraph, return_tensors="pt", max_length=1024, truncation=True)
+        summary_ids = model_en.generate(inputs["input_ids"], max_length=514, min_length=100, length_penalty=2.0, num_beams=4, early_stopping=True)
+        summary = tokenizer_en.decode(summary_ids[0], skip_special_tokens=True)
+        print(f"Summary is okey\n")
+        return summary
+    except Exception as e:
+        print(f"Error summarizing paragraph: {e}")
+        return paragraph
+
+def summarize_paragraph_ko(paragraph):
+    try:
+        inputs = tokenizer_ko.encode(paragraph, return_tensors="pt", max_length=1024, truncation=True)
+        summary_ids = model_ko.generate(inputs, max_length=514, no_repeat_ngram_size=3)
+        summary = tokenizer_ko.decode(summary_ids[0], skip_special_tokens=True)
         print(f"Summary is okey\n")
         return summary
     except Exception as e:
         print(f"Error summarizing paragraph: {e}")
         return paragraph
     
-def summarize_texts(text):
+def summarize_texts(text, lang):
     try:
         print("Summarizing text: ", len(text))
-        inputs = tokenizer(text, return_tensors="pt", max_length=514, truncation=True).to(device)
-        summary_ids = model.generate(inputs["input_ids"], max_length=256, min_length=50, length_penalty=2.0, num_beams=4, early_stopping=True)
-        summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-        print(f"Summary is okey\n")
+        if lang == 'kr':
+            inputs = tokenizer_ko.encode(text, return_tensors="pt", max_length=514, truncation=True)
+            summary_ids = model_ko.generate(inputs)
+            summary = tokenizer_ko.decode(summary_ids[0], skip_special_tokens=True)
+            print(f"Summary is okey\n")
+        else:
+            inputs = tokenizer_en(text, return_tensors="pt", max_length=514, truncation=True)
+            summary_ids = model_en.generate(inputs["input_ids"], max_length=256, min_length=50, length_penalty=2.0, num_beams=4, early_stopping=True)
+            summary = tokenizer_en.decode(summary_ids[0], skip_special_tokens=True)
+            print(f"Summary is okey\n")
         return summary
     except Exception as e:
         print(f"Error summarizing paragraph: {e}")
         return text
-    
