@@ -7,9 +7,10 @@ router = APIRouter()
 @router.get("/searchFulltext")
 async def searchFulltext(pdf_id: str):
     response = weaviate_service.searchFulltext(pdf_id)
-    texts = response['data'][0].get('full_text', 'No content available')
+    texts = response['data'][0].get("full_text")
+    language = response['data'][0].get("language")
 
-    return {"full_text": texts}
+    return {"full_text": texts, "language": language}
 
 @router.get("/searchAll")
 async def searchAll(collection_name: str):
