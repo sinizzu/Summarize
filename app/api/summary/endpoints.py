@@ -14,6 +14,7 @@ async def summaryPaper(pdf_id: str):
         return {"summary": res}
     else:
         response = weaviate_service.searchFulltext(pdf_id)
+        print("response: ", response)
         texts = response['data'][0].get('full_text', 'No content available')
         full = summary_service.textProcessing(texts)
         if full['resultCode'] == 200 and 'data' in full:

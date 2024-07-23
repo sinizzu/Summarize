@@ -10,7 +10,6 @@ SubFastAPI/
 ├── app/
 │   ├── api/
 │   │   ├── summary/
-│   │   ├── topic/
 │   │   ├── __init__.py
 │   ├── core/
 │   │   ├── __init__.py
@@ -36,7 +35,6 @@ SubFastAPI/
 
 ## app/api
 - `summary` : 요약 기능 관련 API 엔드 포인트 정의
-- `topic` : 연관 키워드 관련 API 엔드포인트 정의
 - `__init__.py`: API 디렉토리 패키지 초기화 파일
 
 ## api/core
