@@ -27,6 +27,9 @@ class Settings:
     # IP
     JH_IP = os.getenv("JH_IP")
     
+    # Frontend
+    HJFrontend = os.getenv("HJFrontend")
+    JHFrontend = os.getenv("JHFrontend")
 
     # JWT 설정
     #JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY")

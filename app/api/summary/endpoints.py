@@ -14,13 +14,18 @@ async def summaryPaper(pdf_id: str):
         return {"summary": res}
     else:
         response = weaviate_service.searchFulltext(pdf_id)
-        print("response: ", response)
+        # print("response: ", response)
         texts = response['data'][0].get('full_text', 'No content available')
+        # print("texts: ", texts)
         full = summary_service.textProcessing(texts)
+        start_combined_text = ''
+        end_combined_text= ''
         if full['resultCode'] == 200 and 'data' in full:
+            print("data: ", full['data'])
             start_combined_text = ' '.join([full['data'].get('abstract', ''), 
                                         full['data'].get('introduction', '')])
             end_combined_text = full['data'].get('conclusion', '')
+        
         combined_text = { "resultCode": 200, "data": [start_combined_text, end_combined_text] }
         summary = await summary_service.summarizePaper(combined_text)
         data = summary['data']

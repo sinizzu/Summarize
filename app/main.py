@@ -6,6 +6,11 @@ import os
 
 MainFastAPI = os.getenv("MainFastAPI")
 MainFrontend = os.getenv("MainFrontend")
+
+HJFrontend = settings.HJFrontend
+JHFrontend = settings.JHFrontend
+
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.PROJECT_VERSION
@@ -14,7 +19,7 @@ app = FastAPI(
 # CORS 설정 추가
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8500", MainFastAPI, MainFrontend],  # 모든 도메인에서 오는 요청을 허용합니다. 실제로는 필요한 도메인만 허용하도록 변경해야 합니다.
+    allow_origins=["http://localhost:8500", MainFastAPI, MainFrontend, HJFrontend, JHFrontend],  # 모든 도메인에서 오는 요청을 허용합니다. 실제로는 필요한 도메인만 허용하도록 변경해야 합니다.
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
