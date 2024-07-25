@@ -10,4 +10,5 @@ __pycache__
 # Ignore OCR key files
 **/ocr_key.json
 
-SubFastAPI.tar.gz
+# k8s
+k8s/configmap.yaml

@@ -1,7 +1,7 @@
 all: build run
 stop: rm rmi
 build:
-	docker build -t subfastapi .
+	docker-compose up --build
 run:
 	docker run -it -d -p 3500:3500 --name subfastapi --env-file .env subfastapi
 exec:
@@ -16,3 +16,9 @@ rm:
 	docker rm -f $$(docker ps -aq)
 rmi:
 	docker rmi -f $$(docker images -q)
+tag:
+	docker tag subfastapi wjdguswn1203/subfastapi:lastest
+push:
+	docker push wjdguswn1203/subfastapi:lastest
+pull:
+	docker pull wjdguswn1203/subfastapi:latest

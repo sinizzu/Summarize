@@ -24,10 +24,11 @@ class Settings:
     API_KEY = os.getenv("CUSTOM_SEARCH_API")
     CX = os.getenv("GOOGLE_CX")
     
-    # IP
-    JH_IP = os.getenv("JH_IP")
+    # Main FastAPI
+    MainFastAPI = os.getenv("MainFastAPI")
     
     # Frontend
+    MainFrontend = os.getenv("MainFrontend")
     HJFrontend = os.getenv("HJFrontend")
     JHFrontend = os.getenv("JHFrontend")
 

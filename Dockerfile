@@ -8,10 +8,12 @@ RUN apt-get update && apt-get -y upgrade && apt-get -y install git net-tools vim
 WORKDIR /root
 
 # 의존성 설치
-COPY ./SubFastAPI.tar.gz /root
 RUN mkdir /root/SubFastAPI
 WORKDIR /root/SubFastAPI
-RUN tar xvzf SubFastAPI.tar.gz && rm SubFastAPI.tar.gz
+
+# 애플리케이션 코드 복사
+COPY app/ ./app/
+COPY requirements.txt .
 
 # 가상 환경 생성 및 패키지 설치
 RUN python3.9 -m venv .venv
@@ -22,4 +24,4 @@ RUN pip install -r requirements.txt
 EXPOSE 3500
 
 # 애플리케이션 시작 명령어
-CMD ["./run.sh"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "3500", "--reload"]

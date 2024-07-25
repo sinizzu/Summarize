@@ -1,0 +1,13 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: subfastapi-service
+spec:
+  selector:
+    app: subfastapi
+  ports:
+    - protocol: TCP
+      port: 3500
+      targetPort: 3500
+  type: LoadBalancer
