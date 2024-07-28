@@ -1,15 +1,15 @@
 # 설명
-서브 fast-api repo입니다.
+Summarize
 
 # 디렉토리 설명
-
+요약 API 디렉토리
 ```
 SubFastAPI/
 ├── .github/
 ├── .venv/
 ├── app/
 │   ├── api/
-│   │   ├── summary/
+│   │   ├── summary/ 
 │   │   ├── __init__.py
 │   ├── core/
 │   │   ├── __init__.py
