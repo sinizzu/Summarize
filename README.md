@@ -1,8 +1,8 @@
 # 설명
-Summarize
+Summarize api (요약관련 API)
 
 # 디렉토리 설명
-요약 API 디렉토리
+
 ```
 SubFastAPI/
 ├── .github/
