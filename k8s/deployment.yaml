@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: subfastapi
-        image: wjdguswn1203/subfastapi:lastest
+        image: wjdguswn1203/subfastapi:latest
         ports:
         - containerPort: 3500
         envFrom:

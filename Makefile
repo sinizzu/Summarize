@@ -17,8 +17,8 @@ rm:
 rmi:
 	docker rmi -f $$(docker images -q)
 tag:
-	docker tag subfastapi wjdguswn1203/subfastapi:lastest
+	docker tag subfastapi wjdguswn1203/subfastapi:latest
 push:
-	docker push wjdguswn1203/subfastapi:lastest
+	docker push wjdguswn1203/subfastapi:latest
 pull:
 	docker pull wjdguswn1203/subfastapi:latest
