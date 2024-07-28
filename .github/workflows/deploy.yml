@@ -54,6 +54,10 @@ jobs:
         cat $HOME/.kube/config
 
     - name: Deploy to Kubernetes
+      env:
+        KUBECONFIG: $HOME/.kube/config
       run: |
-        kubectl set image deployment/subfastapi-deployment subfastapi=wjdguswn1203/subfastapi:latest
-        kubectl rollout status deployment/subfastapi-deployment
+          # ConfigMap 생성은 로컬 환경에서 이미 수행되었으므로 이 단계를 생략
+          # kubectl apply -f SubFastAPI/k8s/configmap.yaml
+          kubectl apply -f SubFastAPI/k8s/deployment.yaml
+          kubectl apply -f SubFastAPI/k8s/service.yaml
