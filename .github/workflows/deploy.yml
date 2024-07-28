@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Docker Build and Push
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - dev
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,36 +28,3 @@ jobs:
         context: .
         push: true
         tags: wjdguswn1203/subfastapi:latest
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v1
-      with:
-        version: 'v1.18.0'
-
-    - name: Create .kube directory
-      run: |
-        mkdir -p $HOME/.kube
-        echo "Created .kube directory"
-
-    - name: Update kubeconfig
-      run: |
-        echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
-        echo "Updated kubeconfig"
-        cat $HOME/.kube/config
-
-    - name: Deploy to Kubernetes
-      env:
-        KUBECONFIG: $HOME/.kube/config
-      run: |
-          # ConfigMap 생성은 로컬 환경에서 이미 수행되었으므로 이 단계를 생략
-          # kubectl apply -f SubFastAPI/k8s/configmap.yaml
-          kubectl apply -f SubFastAPI/k8s/deployment.yaml
-          kubectl apply -f SubFastAPI/k8s/service.yaml
