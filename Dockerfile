@@ -8,8 +8,8 @@ RUN apt-get update && apt-get -y upgrade && apt-get -y install git net-tools vim
 WORKDIR /root
 
 # 의존성 설치
-RUN mkdir /root/SubFastAPI
-WORKDIR /root/SubFastAPI
+RUN mkdir /root/Summarize
+WORKDIR /root/Summarize
 
 # 애플리케이션 코드 복사
 COPY app/ ./app/

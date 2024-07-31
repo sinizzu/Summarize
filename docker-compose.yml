@@ -2,7 +2,7 @@ version: '1.0'
 
 services:
   app:
-    image: subfastapi
+    image: summarize
     build:
       context: .
       dockerfile: Dockerfile

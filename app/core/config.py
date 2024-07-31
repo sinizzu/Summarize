@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Settings:
-    PROJECT_NAME: str = "SubFastAPI"
+    PROJECT_NAME: str = "Summarize"
     PROJECT_VERSION: str = "1.0.0"
 
     # 데이터베이스 설정
@@ -31,10 +31,6 @@ class Settings:
     MainFrontend = os.getenv("MainFrontend")
     HJFrontend = os.getenv("HJFrontend")
     JHFrontend = os.getenv("JHFrontend")
-
-    # JWT 설정
-    #JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY")
-    #JWT_ALGORITHM: str = "HS256"
 
     # 애플리케이션 모드
     ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
