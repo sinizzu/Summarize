@@ -27,4 +27,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: wjdguswn1203/subfastapi:latest
+        tags: wjdguswn1203/summarize:latest

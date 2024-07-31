@@ -2,20 +2,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: subfastapi-deployment
+  name: summarize-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: subfastapi
+      app: summarize
   template:
     metadata:
       labels:
-        app: subfastapi
+        app: summarize
     spec:
       containers:
-      - name: subfastapi
-        image: wjdguswn1203/subfastapi:latest
+      - name: summarize
+        image: wjdguswn1203/summarize:latest
         ports:
         - containerPort: 3500
         envFrom:

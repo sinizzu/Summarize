@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: subfastapi-service
+  name: summarize-service
 spec:
   selector:
-    app: subfastapi
+    app: summarize
   ports:
     - protocol: TCP
       port: 3500

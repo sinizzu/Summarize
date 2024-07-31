@@ -3,11 +3,11 @@ stop: rm rmi
 build:
 	docker-compose up --build
 run:
-	docker run -it -d -p 3500:3500 --name subfastapi --env-file .env subfastapi
+	docker run -it -d -p 3500:3500 --name summarize --env-file .env summarize
 exec:
-	docker exec -it subfastapi /bin/bash
+	docker exec -it summarize /bin/bash
 logs:
-	docker logs subfastapi
+	docker logs summarize
 ps:
 	docker ps -a
 img:
@@ -17,8 +17,8 @@ rm:
 rmi:
 	docker rmi -f $$(docker images -q)
 tag:
-	docker tag subfastapi wjdguswn1203/subfastapi:latest
+	docker tag summarize wjdguswn1203/summarize:latest
 push:
-	docker push wjdguswn1203/subfastapi:latest
+	docker push wjdguswn1203/summarize:latest
 pull:
-	docker pull wjdguswn1203/subfastapi:latest
+	docker pull wjdguswn1203/summarize:latest
