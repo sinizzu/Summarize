@@ -5,6 +5,5 @@ scikit-learn
 networkx
 transformers
 langchain
-torch
 weaviate-client
 tiktoken

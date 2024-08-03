@@ -1,5 +1,5 @@
 # 베이스 이미지로 Python 사용
-FROM python:3.9.7
+FROM pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime
 
 # step 2 : Package Install
 RUN apt-get update && apt-get -y upgrade && apt-get -y install git net-tools vim
