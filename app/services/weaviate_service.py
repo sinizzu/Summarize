@@ -7,7 +7,7 @@ pdfCollection = client.collections.get("pdf")
 paperCollection = client.collections.get("paper")
 
 # weaviate full text 검색
-def searchFulltext(pdf_id: str):
+async def searchFulltext(pdf_id: str):
     try: 
         response = pdfCollection.query.fetch_objects(
             filters=Filter.by_property("pdf_id").equal(pdf_id),
@@ -23,7 +23,7 @@ def searchFulltext(pdf_id: str):
     except Exception as e:
         return {"resultCode": 500, "data": str(e)}
     
-def searchPaperId(pdf_url: str):
+async def searchPaperId(pdf_url: str):
     try: 
         response = paperCollection.query.fetch_objects(
             filters=Filter.by_property("pdf_link").equal(pdf_url),
@@ -39,7 +39,7 @@ def searchPaperId(pdf_url: str):
     except Exception as e:
         return {"resultCode": 500, "data": str(e)}
     
-def summarySearch(pdf_id: str):
+async def summarySearch(pdf_id: str):
     try: 
         response = pdfCollection.query.fetch_objects(
             filters=Filter.by_property("pdf_id").equal(pdf_id),
@@ -56,7 +56,7 @@ def summarySearch(pdf_id: str):
     except Exception as e:
         return {"resultCode": 500, "data": str(e)}
     
-def summarySave(pdf_id: str, summary: str):
+async def summarySave(pdf_id: str, summary: str):
     try: 
         res = pdfCollection.query.fetch_objects(
             filters=Filter.by_property("pdf_id").equal(pdf_id)

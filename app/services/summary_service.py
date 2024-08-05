@@ -15,7 +15,7 @@ import torch
 # 경고 메시지 무시
 warnings.filterwarnings("ignore", category=FutureWarning, module='huggingface_hub')
 
-def textProcessing(texts):
+async def textProcessing(texts):
     try: 
         res = texts
         res = process_text(res)
@@ -30,7 +30,7 @@ def textProcessing(texts):
         return {"resultCode": 500, "data": str(e)}
 
 # 전체 텍스트를 초록, 서론, 결론 추출
-def process_text(text):
+async def process_text(text):
     try:
         # Define regex patterns for abstract, introduction, and conclusion
         abstract_pattern = re.compile(r'(?i)abstract\s*(.*?)(?=(introduction|1\s*(.*?)Introduction))', re.DOTALL)
@@ -58,7 +58,7 @@ def process_text(text):
         print(f"Error processing text: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
-def extract_key_sentences(text, num_sentences=6):
+async def extract_key_sentences(text, num_sentences=6):
     sentences = sent_tokenize(text)
     if len(sentences) < num_sentences:
         num_sentences = len(sentences)
@@ -136,7 +136,7 @@ async def summarizePdf(texts: str, lang: str):
     else:
         return {"resultCode": 404, "data": "Summarization failed"}
     
-def summarize_paragraph(paragraph):
+async def summarize_paragraph(paragraph):
     try:
         inputs = tokenizer_en(paragraph, return_tensors="pt", max_length=1024, truncation=True)
         summary_ids = model_en.generate(inputs["input_ids"], max_length=514, min_length=100, length_penalty=2.0, num_beams=4, early_stopping=True)
@@ -147,7 +147,7 @@ def summarize_paragraph(paragraph):
         print(f"Error summarizing paragraph: {e}")
         return paragraph
 
-def summarize_paragraph_ko(paragraph):
+async def summarize_paragraph_ko(paragraph):
     try:
         inputs = tokenizer_ko.encode(paragraph, return_tensors="pt", max_length=1024, truncation=True)
         summary_ids = model_ko.generate(inputs, max_length=514, no_repeat_ngram_size=3)
@@ -158,7 +158,7 @@ def summarize_paragraph_ko(paragraph):
         print(f"Error summarizing paragraph: {e}")
         return paragraph
     
-def summarize_texts(text, lang):
+async def summarize_texts(text, lang):
     try:
         print("Summarizing text: ", len(text))
         if lang == 'kr':
