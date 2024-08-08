@@ -136,7 +136,7 @@ async def summarizePdf(texts: str, lang: str):
     else:
         return {"resultCode": 404, "data": "Summarization failed"}
     
-async def summarize_paragraph(paragraph):
+def summarize_paragraph(paragraph):
     try:
         inputs = tokenizer_en(paragraph, return_tensors="pt", max_length=1024, truncation=True)
         summary_ids = model_en.generate(inputs["input_ids"], max_length=514, min_length=100, length_penalty=2.0, num_beams=4, early_stopping=True)
@@ -147,7 +147,7 @@ async def summarize_paragraph(paragraph):
         print(f"Error summarizing paragraph: {e}")
         return paragraph
 
-async def summarize_paragraph_ko(paragraph):
+def summarize_paragraph_ko(paragraph):
     try:
         inputs = tokenizer_ko.encode(paragraph, return_tensors="pt", max_length=1024, truncation=True)
         summary_ids = model_ko.generate(inputs, max_length=514, no_repeat_ngram_size=3)

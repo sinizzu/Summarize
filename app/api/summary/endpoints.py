@@ -50,7 +50,6 @@ async def summaryPdf(pdf_id: str):
         summary = await summary_service.summarizePdf(texts, lang)
         data = summary['data']
         data = ". ".join(data)
-        # last_sum = summary_service.extract_key_sentences(data)
         last_sum = await summary_service.summarizePdf(data, lang)
         print("last_sum: ", last_sum)
         last_sum = last_sum['data'][0]
