@@ -1,7 +1,7 @@
 all: build run
 stop: rm rmi
 build:
-	docker-compose up --build
+	docker-compose up --build --no-cache
 run:
 	docker run -it -d -p 3500:3500 --name summarize --env-file .env summarize
 exec:

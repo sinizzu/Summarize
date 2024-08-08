@@ -1,5 +1,5 @@
 # 베이스 이미지로 Python 사용
-FROM pytorch/pytorch:1.9.0-cuda11.1-cudnn8-runtime
+FROM pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
 
 # step 2 : Package Install
 RUN apt-get update && apt-get -y upgrade && apt-get -y install git net-tools vim
@@ -16,7 +16,7 @@ COPY app/ ./app/
 COPY requirements.txt .
 
 # 가상 환경 생성 및 패키지 설치
-RUN python3.9 -m venv .venv
+RUN python3 -m venv .venv
 RUN . .venv/bin/activate
 RUN pip install -r requirements.txt
 
