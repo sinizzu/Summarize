@@ -19,6 +19,7 @@ COPY requirements.txt .
 RUN python3 -m venv .venv
 RUN . .venv/bin/activate
 RUN pip install -r requirements.txt
+RUN pip install -U weaviate-client
 RUN python -c "import nltk; nltk.download('punkt')"
 
 # 애플리케이션이 실행될 포트 설정
