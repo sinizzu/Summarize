@@ -4,6 +4,7 @@ from nltk.tokenize import sent_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import networkx as nx
+import os
 
 # 요약 import
 import warnings
@@ -72,16 +73,25 @@ async def extract_key_sentences(text, num_sentences=6):
     key_sentences = " ".join([ranked_sentences[i][1] for i in range(num_sentences)])
     return key_sentences
 
-# Hugging Face 요약 모델 설정
-model_name_en = "facebook/bart-large-cnn"
+# # Hugging Face 요약 모델 설정
+# model_name_en = "facebook/bart-large-cnn"
 
-model_name_ko = "eenzeenee/t5-base-korean-summarization"
+# model_name_ko = "eenzeenee/t5-base-korean-summarization"
+base_dir = os.path.dirname(os.path.abspath(__file__))
+print(base_dir)
+models_dir = os.path.join(base_dir, "../models")
 
-tokenizer_en = AutoTokenizer.from_pretrained(model_name_en)
-model_en = AutoModelForSeq2SeqLM.from_pretrained(model_name_en)
+tokenizer_en_path = os.path.join(models_dir, "facebook_bart-large-cnn_tokenizer")
+model_en_path = os.path.join(models_dir, "facebook_bart-large-cnn")
+tokenizer_kr_path = os.path.join(models_dir, "facebook_bart-large-cnn_tokenizer")
+model_kr_path = os.path.join(models_dir, "facebook_bart-large-cnn")
 
-tokenizer_ko = AutoTokenizer.from_pretrained(model_name_ko)
-model_ko = AutoModelForSeq2SeqLM.from_pretrained(model_name_ko)
+# 로컬에서 모델과 토크나이저 로드
+tokenizer_en = AutoTokenizer.from_pretrained(tokenizer_en_path)
+model_en = AutoModelForSeq2SeqLM.from_pretrained(model_en_path)
+
+tokenizer_ko = AutoTokenizer.from_pretrained(tokenizer_kr_path)
+model_ko = AutoModelForSeq2SeqLM.from_pretrained(model_kr_path)
 
 async def summarizePaper(texts: dict):
     resultCode = texts["resultCode"]
