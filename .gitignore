@@ -6,7 +6,11 @@
 
 # cache
 __pycache__
+**/models
 
 # Ignore OCR key files
 **/ocr_key.json
+
+# k8s
+k8s/configmap.yaml
 

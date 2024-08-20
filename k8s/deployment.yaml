@@ -1,0 +1,24 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: summarize-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: summarize
+  template:
+    metadata:
+      labels:
+        app: summarize
+    spec:
+      containers:
+      - name: summarize
+        image: wjdguswn1203/summarize:latest
+        ports:
+        - containerPort: 3500
+        envFrom:
+        - configMapRef:
+            name: app-config
+        command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "3500", "--reload"]
